@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Para Yohanyeli ❤️</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI', sans-serif;
+}
+
+body{
+height:100vh;
+background: radial-gradient(circle at top,#ff4e8a,#1a001f);
+overflow-x:hidden;
+color:white;
+cursor:none;
+transition:1.5s;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+}
+
+.cursor{
+width:15px;
+height:15px;
+border-radius:50%;
+background:white;
+position:fixed;
+pointer-events:none;
+box-shadow:0 0 20px pink;
+transform:translate(-50%,-50%);
+}
+
+#lockScreen{
+position:fixed;
+width:100%;
+height:100%;
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:1000;
+}
+
+input{
+padding:12px;
+border-radius:10px;
+border:none;
+font-size:18px;
+}
+
+button{
+margin-top:15px;
+padding:12px 30px;
+border:none;
+border-radius:25px;
+background:linear-gradient(45deg,#ff4e8a,#ff9ec6);
+color:white;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.1);
+}
+
+.main{
+backdrop-filter:blur(20px);
+background:rgba(255,255,255,0.08);
+padding:50px;
+border-radius:30px;
+width:85%;
+margin:80px auto;
+text-align:center;
+box-shadow:0 30px 60px rgba(0,0,0,0.6);
+opacity:0;
+transform:translateY(40px);
+transition:1.5s;
+}
+
+.main.active{
+opacity:1;
+transform:translateY(0);
+}
+
+h1{
+font-size:55px;
+margin-bottom:20px;
+text-shadow:0 0 25px pink;
+}
+
+.gallery{
+display:flex;
+justify-content:center;
+gap:40px;
+margin-top:40px;
+perspective:1000px;
+flex-wrap:wrap;
+}
+
+.card{
+width:260px;
+height:360px;
+transform-style:preserve-3d;
+transition:0.8s;
+}
+
+.card img{
+width:100%;
+height:100%;
+object-fit:cover;
+border-radius:20px;
+box-shadow:0 20px 40px rgba(0,0,0,0.6);
+}
+
+.card:hover{
+transform:rotateY(15deg) rotateX(10deg) scale(1.05);
+}
+
+#typed{
+font-size:22px;
+margin-top:20px;
+min-height:30px;
+}
+
+.secret{
+margin-top:30px;
+opacity:0;
+transition:2s;
+font-size:20px;
+color:#ffd6ec;
+}
+
+.secret.show{
+opacity:1;
+}
+
+#letterSection{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:linear-gradient(135deg,#1a001f,#400020);
+color:white;
+padding:80px 20px;
+overflow-y:auto;
+text-align:center;
+opacity:0;
+transition:1.5s;
+}
+
+#letterSection.show{
+opacity:1;
+}
+
+.letter-text{
+max-width:800px;
+margin:auto;
+font-size:24px;
+line-height:1.8;
+text-align:justify;
+}
+
+.musicBtn{
+position:fixed;
+bottom:20px;
+right:20px;
+padding:12px 20px;
+border-radius:20px;
+background:white;
+color:#ff4e8a;
+font-weight:bold;
+}
+
+@keyframes explodeUp{
+to{
+transform:translateY(-120vh);
+opacity:0;
+}
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="bg"></canvas>
+<div class="cursor"></div>
+
+<div id="lockScreen">
+<h2>Clave de acceso ❤️</h2>
+<input type="password" id="password">
+<button onclick="checkPassword()">Entrar</button>
+</div>
+
+<div class="main" id="mainContent">
+<h1>Yohanyeli ❤️</h1>
+
+<div id="typed"></div>
+
+<div class="gallery">
+<div class="card"><img src="foto1.jpg"></div>
+<div class="card"><img src="foto2.jpg"></div>
+</div>
+
+<div class="secret" id="secretMsg">
+No eres parte de mi vida… eres mi vida entera 💖
+</div>
+
+<button onclick="openLetter()">Carta 💌</button>
+</div>
+
+<div id="letterSection">
+<h1>Para Yohanyeli ❤️</h1>
+
+<p class="letter-text">
+Desde el momento en que llegaste a mi vida, todo cambió.  
+No fue algo pequeño… fue algo inmenso.  
+
+Tu sonrisa tiene el poder de calmar cualquier tormenta,  
+tu mirada ilumina incluso mis días más oscuros,  
+y tu presencia hace que el mundo entero tenga sentido.  
+
+No eres solo alguien especial.  
+Eres mi inspiración, mi paz, mi alegría y mi razón de querer ser mejor cada día.  
+
+Si pudiera elegir mil veces…  
+mil veces te volvería a elegir a ti.  
+
+Te amo más de lo que las palabras pueden explicar. 💖
+</p>
+
+<br><br>
+
+<button onclick="foreverLove()" style="font-size:20px;">
+💍 ¿Te quedarías conmigo para siempre?
+</button>
+
+<br><br>
+
+<button onclick="closeLetter()">Volver 🌹</button>
+</div>
+
+<button class="musicBtn" onclick="toggleMusic()">🎵 Música</button>
+
+<audio id="music" loop>
+<source src="music/teamo.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+function checkPassword(){
+if(document.getElementById("password").value==="teamo"){
+document.getElementById("lockScreen").style.display="none";
+document.getElementById("mainContent").classList.add("active");
+typeText();
+setTimeout(()=>{
+document.getElementById("secretMsg").classList.add("show");
+},6000);
+document.getElementById("music").play();
+}else{
+alert("Clave incorrecta 💔");
+}
+}
+
+function typeText(){
+const text="Desde que llegaste, todo tiene sentido...";
+let i=0;
+const speed=60;
+function typing(){
+if(i<text.length){
+document.getElementById("typed").innerHTML+=text.charAt(i);
+i++;
+setTimeout(typing,speed);
+}
+}
+typing();
+}
+
+function openLetter(){
+let letter=document.getElementById("letterSection");
+letter.style.display="block";
+setTimeout(()=>{
+letter.classList.add("show");
+},100);
+}
+
+function closeLetter(){
+let letter=document.getElementById("letterSection");
+letter.classList.remove("show");
+setTimeout(()=>{
+letter.style.display="none";
+},1000);
+}
+
+function foreverLove(){
+
+document.body.style.background="radial-gradient(circle at center,#ff9ec6,#ff4e8a,#1a001f)";
+
+let message=document.createElement("h1");
+message.innerText="Eres el amor de mi vida Yohanyeli ❤️";
+message.style.position="fixed";
+message.style.top="50%";
+message.style.left="50%";
+message.style.transform="translate(-50%,-50%)";
+message.style.fontSize="50px";
+message.style.textAlign="center";
+message.style.textShadow="0 0 30px white";
+document.body.appendChild(message);
+
+for(let i=0;i<40;i++){
+let heart=document.createElement("div");
+heart.innerHTML="💖";
+heart.style.position="fixed";
+heart.style.left=Math.random()*100+"vw";
+heart.style.top="100vh";
+heart.style.fontSize="25px";
+heart.style.animation="explodeUp 3s forwards";
+document.body.appendChild(heart);
+
+setTimeout(()=>{
+heart.remove();
+},3000);
+}
+}
+
+const cursor=document.querySelector(".cursor");
+document.addEventListener("mousemove",e=>{
+cursor.style.left=e.clientX+"px";
+cursor.style.top=e.clientY+"px";
+});
+
+const canvas=document.getElementById("bg");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+for(let i=0;i<120;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+r:Math.random()*2,
+dx:(Math.random()-0.5)*0.5,
+dy:(Math.random()-0.5)*0.5
+});
+}
+
+function animate(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="white";
+particles.forEach(p=>{
+p.x+=p.dx;
+p.y+=p.dy;
+if(p.x<0||p.x>canvas.width) p.dx*=-1;
+if(p.y<0||p.y>canvas.height) p.dy*=-1;
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctx.fill();
+});
+requestAnimationFrame(animate);
+}
+animate();
+
+function toggleMusic(){
+const music=document.getElementById("music");
+if(music.paused){
+music.play();
+}else{
+music.pause();
+}
+}
+
+</script>
+
+</body>
+</html>
